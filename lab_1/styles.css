@@ -12,8 +12,12 @@
     width: 100%;
 }
 
+.section_1 > img {
+    max-width :100%;
+}
+
 .section_2 > img {
-    width: 100%;
+    max-width :100%;
 }
 
 .section_1 > p {
@@ -60,7 +64,7 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    column-gap: 25px;
+    gap: 25px;
 }
 
 .grid > div {
@@ -70,3 +74,24 @@
     overflow: scroll;
 }
 
+@media (max-width: 799px) {
+    .nav-bar > ul > li {
+        display: none;
+    }
+
+    .nav-bar > img {
+        max-width: 75%;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
