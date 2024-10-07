@@ -36,57 +36,85 @@ function App() {
         setCurrentTheme(currentTheme === themes.light ? themes.dark : themes.light);
     };
     return (
-        <div className='app-container'>
-            <form className="note-form" onSubmit={createNoteHandler}>
-                <div>
-                    <input
-                        placeholder="Note Title"
-                        onChange={(event) =>
-                            setCreateNote({ ...createNote, title: event.target.value })}
-                        required>
-                    </input>
-                </div>
-
-                <div>
-                    <textarea
-                        onChange={(event) =>
-                            setCreateNote({ ...createNote, content: event.target.value })}
-                        required>
-                    </textarea>
-                </div>
-
-                <div>
-                    <select
-                        onChange={(event) =>
-                            setCreateNote({ ...createNote, label: event.target.value as Label })}
-                        required>
-                        <option value={Label.personal}>Personal</option>
-                        <option value={Label.study}>Study</option>
-                        <option value={Label.work}>Work</option>
-                        <option value={Label.other}>Other</option>
-                    </select>
-                </div>
-
-                <div><button type="submit">Create Note</button></div>
-            </form>
-
-            <div className="notes-grid">
-                {notes.map((note) => (
-                    <div
-                        key={note.id}
-                        className="note-item"
-                        onClick={() => setSelectedNode(note.id)}
-                    >
-                        <div className="notes-header">
-                            <button onClick={() => setNotes(notes.filter(n => n.id !== note.id))}>x</button>
-                        </div>
-                        <h2 contentEditable={selectedNote === note.id}> {note.title} </h2>
-                        <p contentEditable={selectedNote === note.id}> {note.content} </p>
-                        <p contentEditable={selectedNote === note.id}> {note.label} </p>
+        <ThemeContext.Provider value={currentTheme}>
+            <button onClick={toggleTheme}> Toggle Theme </button>
+            <div
+                className='app-container'
+                style={{
+                    background: currentTheme.background,
+                    color: currentTheme.foreground,
+                    padding: "20px",
+                }}
+            >
+                <form className="note-form" onSubmit={createNoteHandler}>
+                    <div>
+                        <input
+                            placeholder="Note Title"
+                            onChange={(event) =>
+                                setCreateNote({ ...createNote, title: event.target.value })}
+                            required>
+                        </input>
                     </div>
-                ))}
+
+                    <div>
+                        <textarea
+                            onChange={(event) =>
+                                setCreateNote({ ...createNote, content: event.target.value })}
+                            required>
+                        </textarea>
+                    </div>
+
+                    <div>
+                        <select
+                            onChange={(event) =>
+                                setCreateNote({ ...createNote, label: event.target.value as Label })}
+                            required>
+                            <option value={Label.personal}>Personal</option>
+                            <option value={Label.study}>Study</option>
+                            <option value={Label.work}>Work</option>
+                            <option value={Label.other}>Other</option>
+                        </select>
+                    </div>
+
+                    <div><button type="submit">Create Note</button></div>
+                </form>
+
+                <div className="notes-grid">
+                    {notes.map((note) => (
+                        <div
+                            key={note.id}
+                            className="note-item"
+                            onClick={() => setSelectedNode(note.id)}
+                            style={{
+                                background: currentTheme.background,
+                                color: currentTheme.foreground,
+                                padding: "20px",
+                            }}
+                        >
+                            <div className="notes-header">
+                                <button
+                                    style={{
+                                        background: currentTheme.background,
+                                        color: currentTheme.foreground,
+                                    }}
+                                    onClick={() => setNotes(notes.filter(n => n.id !== note.id))}>x</button>
+                                <button onClick={() => toggleLike(note.id)}>{favorites.includes(note.id) ? '❤️ ' : '🩶'}</button>
+                            </div>
+                            <h2 contentEditable={selectedNote === note.id}> {note.title} </h2>
+                            <p contentEditable={selectedNote === note.id}> {note.content} </p>
+                            <p contentEditable={selectedNote === note.id}> {note.label} </p>
+                        </div>
+                    ))}
+                </div>
+                <div>
+                    <h2>List of favorites</h2>
+                    {favorites.map(id => (
+                        <p>{dummyNotesList.find(x => x.id === id)?.title ?? "Not found"}</p>
+                    ))}
+                </div>
             </div>
-        </div>);
+        </ThemeContext.Provider>
+    );
     /*return (
         <ThemeContext.Provider value={currentTheme}>
             <button onClick={toggleTheme}> Toggle Theme </button>
