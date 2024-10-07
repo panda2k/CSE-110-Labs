@@ -6,7 +6,22 @@ import { ThemeContext, themes } from './themeContext';
 
 function App() {
     const [favorites, setFavorites] = useState<number[]>([]);
-    
+    const [notes, setNotes] = useState(dummyNotesList);
+    const initialNote = {
+        id: -1,
+        title: "",
+        content: "",
+        label: Label.personal,
+    };
+    const [createNote, setCreateNote] = useState(initialNote);
+    const createNoteHandler = (e: any) => {
+        e.preventDefault();
+        const nextId = Math.max(...notes.map(n => n.id)) + 1;
+        setNotes([...notes, { ...createNote, id: nextId }]);
+    }
+
+    const [selectedNote, setSelectedNode] = useState<number>(-1);
+
     const toggleLike = (id: number) => {
         if (favorites.includes(id)) {
             setFavorites(favorites.filter(x => x !== id).sort());
@@ -15,21 +30,72 @@ function App() {
         }
     }
 
-     const [currentTheme, setCurrentTheme] = useState(themes.light);
+    const [currentTheme, setCurrentTheme] = useState(themes.light);
 
-     const toggleTheme = () => {
-       setCurrentTheme(currentTheme === themes.light ? themes.dark : themes.light);
-     };
-
+    const toggleTheme = () => {
+        setCurrentTheme(currentTheme === themes.light ? themes.dark : themes.light);
+    };
     return (
-       <ThemeContext.Provider value={currentTheme}>
-         <button onClick={toggleTheme}> Toggle Theme </button>
+        <div className='app-container'>
+            <form className="note-form" onSubmit={createNoteHandler}>
+                <div>
+                    <input
+                        placeholder="Note Title"
+                        onChange={(event) =>
+                            setCreateNote({ ...createNote, title: event.target.value })}
+                        required>
+                    </input>
+                </div>
+
+                <div>
+                    <textarea
+                        onChange={(event) =>
+                            setCreateNote({ ...createNote, content: event.target.value })}
+                        required>
+                    </textarea>
+                </div>
+
+                <div>
+                    <select
+                        onChange={(event) =>
+                            setCreateNote({ ...createNote, label: event.target.value as Label })}
+                        required>
+                        <option value={Label.personal}>Personal</option>
+                        <option value={Label.study}>Study</option>
+                        <option value={Label.work}>Work</option>
+                        <option value={Label.other}>Other</option>
+                    </select>
+                </div>
+
+                <div><button type="submit">Create Note</button></div>
+            </form>
+
+            <div className="notes-grid">
+                {notes.map((note) => (
+                    <div
+                        key={note.id}
+                        className="note-item"
+                        onClick={() => setSelectedNode(note.id)}
+                    >
+                        <div className="notes-header">
+                            <button onClick={() => setNotes(notes.filter(n => n.id !== note.id))}>x</button>
+                        </div>
+                        <h2 contentEditable={selectedNote === note.id}> {note.title} </h2>
+                        <p contentEditable={selectedNote === note.id}> {note.content} </p>
+                        <p contentEditable={selectedNote === note.id}> {note.label} </p>
+                    </div>
+                ))}
+            </div>
+        </div>);
+    /*return (
+        <ThemeContext.Provider value={currentTheme}>
+            <button onClick={toggleTheme}> Toggle Theme </button>
             <div className='app-container'
-                 style={{
-                   background: currentTheme.background,
-                   color: currentTheme.foreground,
-                   padding: "20px",
-                 }}
+                style={{
+                    background: currentTheme.background,
+                    color: currentTheme.foreground,
+                    padding: "20px",
+                }}
             >
                 <form className="note-form">
                     <div><input placeholder="Note Title"></input></div>
@@ -38,37 +104,37 @@ function App() {
 
                     <div><button type="submit">Create Note</button></div>
                 </form>
-             <div className="notes-grid">
-               {dummyNotesList.map((note) => (
-                 <div
-                   key={note.id}
-                   className="note-item"
-                 style={{
-                   background: currentTheme.background,
-                   color: currentTheme.foreground,
-                   padding: "20px",
-                 }}
+                <div className="notes-grid">
+                    {dummyNotesList.map((note) => (
+                        <div
+                            key={note.id}
+                            className="note-item"
+                            style={{
+                                background: currentTheme.background,
+                                color: currentTheme.foreground,
+                                padding: "20px",
+                            }}
                         >
 
-                   <div className="notes-header">
-                    <button onClick={() => toggleLike(note.id)}>{favorites.includes(note.id) ? '❤️ ' : '🩶'}</button>
-                     <button>x</button>
-                   </div>
-                   <h2> {note.title} </h2>
-                   <p> {note.content} </p>
-                   <p> {note.label} </p>
-                 </div>
-               ))}
-             </div>
+                            <div className="notes-header">
+                                <button onClick={() => toggleLike(note.id)}>{favorites.includes(note.id) ? '❤️ ' : '🩶'}</button>
+                                <button>x</button>
+                            </div>
+                            <h2> {note.title} </h2>
+                            <p> {note.content} </p>
+                            <p> {note.label} </p>
+                        </div>
+                    ))}
+                </div>
                 <div>
                     <h2>List of favorites</h2>
-                    { favorites.map(id => (
+                    {favorites.map(id => (
                         <p>{dummyNotesList.find(x => x.id === id)?.title ?? "Not found"}</p>
-                    )) }
+                    ))}
                 </div>
             </div>
-       </ThemeContext.Provider>
-    );
+        </ThemeContext.Provider>
+    );*/
 }
 
 export default App;
