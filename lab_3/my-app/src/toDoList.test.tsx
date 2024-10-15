@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { dummyGroceryList } from "./constants";
 import { ToDoList } from "./toDoList";
 
-describe("Read StickyNote", () => {
+describe("Read ToDoList", () => {
     test("All todolist items can read", () => {
         render(<ToDoList />)
         dummyGroceryList.forEach(n => {
@@ -12,7 +12,7 @@ describe("Read StickyNote", () => {
 })
 
 describe("Title display", () => {
-    test("Sticky note title displays number of checked", () => {
+    test("title displays number of checked", () => {
         render(<ToDoList />)
         let checkedItems = 0;
         const toCheck = dummyGroceryList[0];

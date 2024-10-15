@@ -1,11 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { dummyNotesList } from "./constants";
 import { StickyNotes } from "./stickyNotes";
-test("renders create note form", () => {
-    render(<StickyNotes />);
-    const createNoteButton = screen.getByText("Create Note");
-    expect(createNoteButton).toBeInTheDocument();
-});
 
 describe("Create StickyNote", () => {
     test("renders create note form", () => {
@@ -39,7 +34,7 @@ describe("Create StickyNote", () => {
 });
 
 describe("Read StickyNote", () => {
-    test("All sticky notes can read", () => {
+    test("All sticky notes can be read", () => {
         render(<StickyNotes />)
         dummyNotesList.forEach(n => {
             expect(screen.getByText(n.title)).toBeInTheDocument();
@@ -56,13 +51,13 @@ describe("Update StickyNote", () => {
         screen.getByText(editNote.title).innerHTML = "Updated title"
         expect(screen.getByText("Updated title")).toBeInTheDocument();
     });
-    test("Sticky note title updates", () => {
+    test("Sticky note content updates", () => {
         render(<StickyNotes />)
         const editNote = dummyNotesList[0];
         screen.getByText(editNote.content).innerHTML = "Updated content"
         expect(screen.getByText("Updated content")).toBeInTheDocument();
     });
-    test("Sticky note title updates", () => {
+    test("Sticky note label updates", () => {
         render(<StickyNotes />)
         const editNote = dummyNotesList[0];
         screen.getByTestId(`note-label-${editNote.id}`).innerHTML = "Updated label"
@@ -98,5 +93,7 @@ describe("Like StickyNote", () => {
         expect(queryByTestId(`favorites-${editNote.id}`)).toBeNull();
         fireEvent.click(screen.getByTestId(`note-like-${editNote.id}`))
         expect(screen.getByTestId(`favorites-${editNote.id}`)).toBeInTheDocument()
+        fireEvent.click(screen.getByTestId(`note-like-${editNote.id}`))
+        expect(queryByTestId(`favorites-${editNote.id}`)).toBeNull();
     });
 })
