@@ -92,6 +92,7 @@ export const StickyNotes = () => {
                                 color: currentTheme.foreground,
                                 padding: "20px",
                             }}
+                            data-testid={`note-item-${note.id}`}
                         >
                             <div className="notes-header">
                                 <button
@@ -99,19 +100,20 @@ export const StickyNotes = () => {
                                         background: currentTheme.background,
                                         color: currentTheme.foreground,
                                     }}
-                                    onClick={() => setNotes(notes.filter(n => n.id !== note.id))}>x</button>
-                                <button onClick={() => toggleLike(note.id)}>{favorites.includes(note.id) ? '❤️ ' : '🩶'}</button>
+                                    data-testid={`note-delete-${note.id}`}
+                                    onClick={() => { setNotes(notes.filter(n => n.id !== note.id)); setFavorites(favorites.filter(id => id !== note.id)) }}>x</button>
+                                <button data-testid={`note-like-${note.id}`} onClick={() => toggleLike(note.id)}>{favorites.includes(note.id) ? '❤️ ' : '🩶'}</button>
                             </div>
-                            <h2 contentEditable={selectedNote === note.id}> {note.title} </h2>
-                            <p contentEditable={selectedNote === note.id}> {note.content} </p>
-                            <p contentEditable={selectedNote === note.id}> {note.label} </p>
+                            <h2 data-testid={`note-title-${note.id}`} contentEditable={selectedNote === note.id}> {note.title} </h2>
+                            <p data-testid={`note-body-${note.id}`} contentEditable={selectedNote === note.id}> {note.content} </p>
+                            <p data-testid={`note-label-${note.id}`} contentEditable={selectedNote === note.id}> {note.label} </p>
                         </div>
                     ))}
                 </div>
                 <div>
                     <h2>List of favorites</h2>
                     {favorites.map(id => (
-                        <p>{dummyNotesList.find(x => x.id === id)?.title ?? "Not found"}</p>
+                        <p data-testid={`favorites-${id}`}>{dummyNotesList.find(x => x.id === id)?.title ?? "Not found"}</p>
                     ))}
                 </div>
             </div>
