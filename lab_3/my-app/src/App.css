@@ -7,6 +7,12 @@ body {
  grid-template-columns: 1fr;
 }
 
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 @media (min-width: 600px) {
  .app-container {
    display: grid;
